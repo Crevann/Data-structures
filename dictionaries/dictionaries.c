@@ -97,6 +97,19 @@ dict_node *dict_remove(dict_table *table, const char *key, const size_t key_len)
     return table->nodes[index];
 }
 
+/*dict_node *dict_rehash(dict_table *table){
+    for (size_t i = 0; i < table->hashmap_size; i++)
+    {
+        if(table->nodes[i] != NULL){
+            size_t hash = djb33x_hash(table->nodes[i]->key, table->nodes[i]->key_len);
+            size_t new_index = hash % table->hashmap_size;
+            if(new_index != i){
+
+            }
+        }
+    }
+}*/
+
 int main(int argv, char **argc) {
     const size_t hashmap_size = 128;
     dict_table *table = dict_table_new(hashmap_size);

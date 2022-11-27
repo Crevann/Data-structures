@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #define linked_list (list_node **)&my_linked_list
+#define shuffled_list (list_node **)&shuffle_list
 
 typedef struct list_node {
     struct list_node *prev;
@@ -38,7 +39,7 @@ list_node *list_append(list_node **head, list_node *item) {
 }
 
 list_node *list_remove(list_node **head, list_node *item) {
-    if(*head == item){
+    if (*head == item) {
         *head = (*head)->next;
         free(item);
         return item;
@@ -68,6 +69,30 @@ list_node *list_insert(list_node *position, list_node *item, bool previous) {
     return item;
 }
 
+//Still not working well
+list_node *list_shuffle(list_node **head) {
+    list_node *item = (*head)->next;
+    list_node *next_item = NULL;
+    list_node *prev_item = NULL;
+    while (item && item->next){
+        next_item = item->next;
+        prev_item = item->prev;
+
+        next_item->prev = prev_item->prev;
+        if(!next_item->prev){
+            *head = next_item;
+        }
+        if(item->next->next){
+            prev_item->next = next_item->next;
+            next_item->next = item;
+            prev_item->prev = item;
+            item->prev = next_item;
+            item->next = prev_item;
+        }
+        item = item->next->next;
+    }
+}
+
 string_item *string_item_new(const char *string) {
     string_item *item = malloc(sizeof(string_item));
     if (!item) {
@@ -85,8 +110,9 @@ int main(int argc, char **argv) {
     list_append(linked_list, (list_node *)string_item_new("^owo^"));
     list_insert(position_node, (list_node *)string_item_new("^<3<^"), true);
     list_insert(position_node, (list_node *)string_item_new("^>3>^"), false);
-    list_remove(linked_list, head_to_remove);
-    list_remove(linked_list, item_to_remove);
+    // list_remove(linked_list, head_to_remove);
+    // list_remove(linked_list, item_to_remove);
+    list_shuffle(linked_list);
     string_item *current_string = my_linked_list;
     while (current_string) {
         printf("%s\n", current_string->string);
