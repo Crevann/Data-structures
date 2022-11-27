@@ -46,7 +46,7 @@ list_node *list_pop(list_node **head) {
 
 list_node *list_remove(list_node **head, list_node *item) {
     list_node *node_to_edit = *head;
-    if(item == *head){
+    if (item == *head) {
         *head = (*head)->next;
         free(item);
         return item;
@@ -57,6 +57,20 @@ list_node *list_remove(list_node **head, list_node *item) {
     node_to_edit->next = item->next;
     free(item);
     return item;
+}
+
+list_node *list_reverse(list_node **head) {
+    list_node *current_item = *head;
+    list_node *next_item = (*head)->next;
+    list_node *previous_item = NULL;
+    while (current_item) {
+        next_item = current_item->next;
+        if(!next_item) { *head = current_item; }
+        current_item->next = previous_item;
+        previous_item = current_item;
+        current_item = next_item;
+    }
+    return *head;
 }
 
 string_item *string_item_new(const char *string) {
@@ -71,15 +85,16 @@ string_item *string_item_new(const char *string) {
 int main(int argc, char **argv) {
     string_item *my_linked_list = NULL;
     list_node *node_to_remove = list_append(linked_list,
-                (list_node *)string_item_new("Hello World"));
+                                            (list_node *)string_item_new("Hello World"));
     list_append(linked_list,
                 (list_node *)string_item_new("Test001"));
     list_node *node_to_remove_2 = list_append(linked_list,
-                (list_node *)string_item_new("Test002"));
+                                              (list_node *)string_item_new("Test002"));
     list_append((list_node **)&my_linked_list,
                 (list_node *)string_item_new("Last Item of the Linked List"));
-    list_remove(linked_list, node_to_remove);
-    list_remove(linked_list, node_to_remove_2);
+    //list_remove(linked_list, node_to_remove);
+    //list_remove(linked_list, node_to_remove_2);
+    list_reverse(linked_list);
     string_item *string_item = my_linked_list;
     while (string_item) {
         printf("%s\n", string_item->string);
